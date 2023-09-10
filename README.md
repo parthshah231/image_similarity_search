@@ -50,7 +50,7 @@ python run.py
 
 To evaluate the model:
 ```
-python evaluate.py --version-number=30 --n=8
+python evaluate.py --version-number=30 --num-show-similar=8
 ```
 Here, version number specifies a lightning model
 (you can use whichever model works best for you!). \
