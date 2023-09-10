@@ -33,7 +33,7 @@ class SnacksDataset(Dataset):
         self.config = config
         self.dataset = load_dataset(DATA_PATH, split=split)
 
-        if not self.config.augment:
+        if not self.config.augment and split == "train":
             self.transform = transforms.Compose(
                 [
                     transforms.Resize((224, 224)),
