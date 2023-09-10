@@ -4,7 +4,7 @@ from tqdm import tqdm
 
 from configs import Config
 from loaders import SnacksDataset, TestDataset
-from train import train_siamese
+from train import get_loaders, train_siamese
 
 if __name__ == "__main__":
     # Ideally we want to using a 4x2 or 6x2 grid for lr and wd
@@ -34,12 +34,7 @@ if __name__ == "__main__":
     pbar = tqdm(configs)
     for config in pbar:
         print(config)
-        train_dataset = SnacksDataset(config=config, split="train")
-        val_dataset = SnacksDataset(config=config, split="validation")
-        test_dataset = TestDataset()
-
-        train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-        val_loader = DataLoader(val_dataset, batch_size=32)
+        train_loader, val_loader, test_dataset = get_loaders(config=config)
 
         train_siamese(
             config=config,
