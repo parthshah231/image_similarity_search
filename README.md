@@ -21,9 +21,18 @@ Siamese Network is a special type of neural net that is used extensively for lea
 
 ![Validation Curves](https://github.com/parthshah231/image_similarity_search/blob/master/README/validation_curves.png)
 
-From the above plots: \
-Training accuracy: ~93% (train/triplet - 1) \
-Val accuracy: ~84% (val/triplet - 1)
+From the above plots:
+
+For version 36 (backbone: "wide_resnet", "augment": false, epochs: 30, lr: 0.0003, wd: 0.01) \
+Training accuracy: ~100% (1- train/triplet) \
+Val accuracy: ~76% (1- val/triplet)
+
+For version 37 (backbone: "wide_resnet", "augment": true, epochs: 30, lr: 0.0003, wd: 0.01) \
+Training accuracy: ~98% (1- train/triplet) \
+Val accuracy: ~86% (1- val/triplet)
+
+Only difference between version 36 and version 37 is applying augments which helps in preventing overfitting and
+generalizes faster in same time (30 epochs).
 
 ## Example outputs
 ![Output1](https://github.com/parthshah231/image_similarity_search/blob/master/README/output1.png)
@@ -34,13 +43,18 @@ Val accuracy: ~84% (val/triplet - 1)
 
 ## Usage:
 
+Clone the repo:
+```
+git clone git@github.com:parthshah231/image_similarity_search.git
+```
+
 To train a new model you can either:
 ```
 python train.py --backbone='efficientnet' --augment --epochs=30 --lr=3e-4 --wd=1e-2
 ```
 or
 
-1. Open run.py
+1. Open ```run.py```
 2. Define a grid
 
 then,
@@ -53,12 +67,10 @@ To evaluate the model:
 python evaluate.py --version-number=30 --num-show-similar=8
 ```
 Here, version number specifies a lightning model
-(you can use whichever model works best for you!). \
-It will grab a config object present in the version folder and then load the trained model. After loading the model, it will select a random image from the test dataset and grab 'n' similar images from the test_dataset based on the similarity score. It will plot those images along with input image and similarity scores associated to the image.
+(you can use any model that works best for you!). \
+It will grab a config file present in the version folder and then load the trained model. After loading the model, it will select a random image from the test dataset and grab 'n' similar images from the test_dataset based on the similarity score. It will plot those images along with input image and similarity scores associated to the image.
 
 ## Further Implementations:
 The best model still has some difficultly, as you can see from the 3rd example.
-1. For now, we have limited the model learning to only 15 epochs but it can be clearly observed from learning and validation curves that the model still shows a lot of potential.
-2. Implementing augmentations to generalize the model such as transforms.RandomRotation() or implement TrivialAugmentWide which contains an array of augmentations.
-3. Add a classfication making it a multi-modal task and boosting classifiers which perform poorly (model has difficulty learning/classifying)
-For e.g. Apples vs Oranges | Cakes vs Muffins
+1. Implementing more augmentations to generalize the model such as TrivialAugmentWide which contains an array of augmentations.
+2. Add a classfication task making it a multi-modal job and boost the classifiers which perform poorly (model has difficulty learning/classifying)
