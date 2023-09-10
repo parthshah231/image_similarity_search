@@ -180,7 +180,6 @@ class SiameseNetwork(pl.LightningModule):
         top_k_similarities: List[float]"""
         self.eval()  # Set the network in evaluation mode
 
-        # Creating a hash key for the test dataset
         test_dataset_key = hash(
             tuple(hash(img.cpu().numpy().tobytes()) for img, _ in test_dataset)
         )
@@ -205,17 +204,13 @@ class SiameseNetwork(pl.LightningModule):
         with torch.no_grad():  # Disable gradient computation
             input_image = input_image.unsqueeze(0).to(self.device)
             input_image_feature = self.encoder(input_image)
-
-            # Retrieve the cached test dataset features
             test_features = self.test_dataset_cache[test_dataset_key]
 
-            # Compute the similarities between the input image and the test dataset
             similarities = [
                 F.cosine_similarity(input_image_feature, test_feature, dim=-1).item()
                 for test_feature in test_features
             ]
 
-            # Find the top k most similar images
             top_k_indices = sorted(
                 range(len(similarities)), key=lambda i: similarities[i], reverse=True
             )[1 : top_k + 1]
