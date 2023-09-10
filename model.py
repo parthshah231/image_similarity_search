@@ -1,5 +1,7 @@
 from typing import List, Tuple
+from pathlib import Path
 
+import pickle
 import torch
 import torch.nn as nn
 import torchvision.models as models
@@ -10,6 +12,7 @@ from torch import Tensor
 
 from configs import Config
 from loaders import TestDataset
+from constants import ROOT
 
 
 class TripletLoss(nn.Module):
@@ -138,6 +141,21 @@ class SiameseNetwork(pl.LightningModule):
         self.criterion = TripletLoss()
         self.test_dataset_cache = {}
 
+    def forward(self, anchor, positive, negative):
+        """Returns embeddings for anchor, positive and negative image.
+
+        Params:
+        -------
+        anchor: Tensor
+
+        postive: Tensor
+
+        negative: Tensor"""
+        encoded_anchor = self.encoder(anchor)
+        encoded_positive = self.encoder(positive)
+        encoded_negative = self.encoder(negative)
+        return encoded_anchor, encoded_positive, encoded_negative
+
     def find_similar_images(
         self,
         input_image: Tensor,
@@ -167,13 +185,22 @@ class SiameseNetwork(pl.LightningModule):
             tuple(hash(img.cpu().numpy().tobytes()) for img, _ in test_dataset)
         )
 
-        # If the test dataset features are not in the cache, compute and store them
-        if test_dataset_key not in self.test_dataset_cache:
-            with torch.no_grad():
-                self.test_dataset_cache[test_dataset_key] = [
-                    self.encoder(img.unsqueeze(0).to(self.device))
-                    for img, _ in test_dataset
-                ]
+        cache_file_path = Path(ROOT / f"cache_{test_dataset_key}.pkl")
+
+        if cache_file_path.exists():
+            with open(cache_file_path, "rb") as f:
+                self.test_dataset_cache = pickle.load(f)
+        else:
+            # If the test dataset features are not in the cache, compute and store them
+            if test_dataset_key not in self.test_dataset_cache:
+                with torch.no_grad():
+                    self.test_dataset_cache[test_dataset_key] = [
+                        self.encoder(img.unsqueeze(0).to(self.device))
+                        for img, _ in test_dataset
+                    ]
+
+            with open(cache_file_path, "wb") as f:
+                pickle.dump(self.test_dataset_cache, f)
 
         with torch.no_grad():  # Disable gradient computation
             input_image = input_image.unsqueeze(0).to(self.device)
@@ -195,21 +222,6 @@ class SiameseNetwork(pl.LightningModule):
             top_k_similarities = [similarities[i] for i in top_k_indices]
 
         return top_k_indices, top_k_similarities
-
-    def forward(self, anchor, positive, negative):
-        """Returns embeddings for anchor, positive and negative image.
-
-        Params:
-        -------
-        anchor: Tensor
-
-        postive: Tensor
-
-        negative: Tensor"""
-        encoded_anchor = self.encoder(anchor)
-        encoded_positive = self.encoder(positive)
-        encoded_negative = self.encoder(negative)
-        return encoded_anchor, encoded_positive, encoded_negative
 
     def training_step(
         self,
