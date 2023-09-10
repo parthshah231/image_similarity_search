@@ -1,8 +1,21 @@
 from pathlib import Path
 from datasets import load_dataset
 
+
+def ensure_dir(path: Path) -> Path:
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
+    if not path.is_dir():
+        raise FileExistsError(f"Specified path {path} is not a dir")
+    return path
+
+
 ROOT = Path(__file__).resolve().parent
 DATA_PATH = "Matthijs/snacks"
+DATA = ensure_dir(ROOT / "data")
+TRAIN_DIR = DATA / "train"
+VAL_DIR = DATA / "validation"
+TEST_DIR = DATA / "test"
 LIGHTNING_LOGS = ROOT / "lightning_logs"
 
 LABEL_DICT = {
