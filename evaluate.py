@@ -129,14 +129,13 @@ def plot_similar_images(
 
     # Plot the similar images
     for i, idx in enumerate(similar_img_indices):
-        image, label = test_dataset[idx]  # Extract image and label
-        axes[i + 1].imshow(image.permute(1, 2, 0))  # Use the image part of the tuple
+        image, label = test_dataset[idx]
+        axes[i + 1].imshow(image.permute(1, 2, 0))
         axes[i + 1].set_title(
             f"Similarity Score: {similarity_scores[i]:.4f}\nLabel: {label}"
         )
         axes[i + 1].axis("off")
 
-    # Show the plot
     plt.tight_layout()
     plt.show()
 

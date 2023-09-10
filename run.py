@@ -17,10 +17,10 @@ if __name__ == "__main__":
         ParameterGrid(
             dict(
                 backbone=[
-                    "resnext",
-                    "efficientnet",
+                    # "resnext",
+                    # "efficientnet",
                     "mobilenet",
-                    "wide_resnet",
+                    # "wide_resnet",
                 ],
                 augment=[False, True],
                 lr=[3e-4],
