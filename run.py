@@ -10,20 +10,22 @@ if __name__ == "__main__":
     # Ideally we want to using a 4x2 or 6x2 grid for lr and wd
     # lr = [1e-1, 1e-2, 1e-3, 1e-4]
     # wd = [1e-2, 1e-4]
+    # and check with different kinds of backbone - (image encoder)
+    # backbone = ["resnext", "efficientnet", "mobilenet", "wide_resnet"]
 
     grid_dicts = list(
         ParameterGrid(
             dict(
                 backbone=[
-                    # "resnext",
+                    "resnext",
                     "efficientnet",
-                    # "mobilenet",
-                    # "wide_resnet",
+                    "mobilenet",
+                    "wide_resnet",
                 ],
                 augment=[False, True],
                 lr=[3e-4],
                 wd=[1e-2],
-                epochs=[15],
+                epochs=[30],
             )
         )
     )
