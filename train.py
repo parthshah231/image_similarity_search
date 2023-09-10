@@ -67,15 +67,4 @@ def train_siamese(
 
 
 if __name__ == "__main__":
-    # train_labels = TRAIN["label"]
-    # train_label_counts = Counter(train_labels)
-
-    # val_labels = VAL["label"]
-    # val_label_counts = Counter(val_labels)
-
-    # for label, count in val_label_counts.items():
-    #     print(f"Label {LABEL_DICT[str(label)]}: {count} samples")
-
-    # sns.barplot(pd.DataFrame(val_label_counts, index=[0]))
-    # plt.show()
     pass

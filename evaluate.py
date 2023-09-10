@@ -87,10 +87,6 @@ def img_similarity_search(
         config=config,
     )
 
-    # num_images = len(dataset)
-    # idx = int(np.random.choice(num_images, 1)[0])
-    # img, label = dataset[idx]
-
     top_k_similar_images, similarity_scores = trained_model.find_similar_images(
         input_img, dataset, top_k=num_show_similar
     )
