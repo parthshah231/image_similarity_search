@@ -36,7 +36,7 @@ Val accuracy: ~84% (val/triplet - 1)
 
 To train a new model you can either:
 ```
-python train.py --backbone='efficientnet' --augment=False --epochs=30 --lr=3e-4 --wd=1e-2
+python train.py --backbone='efficientnet' --augment --epochs=30 --lr=3e-4 --wd=1e-2
 ```
 or
 

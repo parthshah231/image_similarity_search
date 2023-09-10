@@ -91,7 +91,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--augment",
-        type="store_true",
+        action="store_true",
         default=False,
         help="Whether to augment the data",
     )
