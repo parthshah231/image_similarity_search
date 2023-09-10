@@ -1,3 +1,4 @@
+import argparse
 from typing import List, Tuple
 from pathlib import Path
 
@@ -141,9 +142,26 @@ def plot_similar_images(
 
 
 if __name__ == "__main__":
-    # dummy test
+    parser = argparse.ArgumentParser(description="Evaluate a model")
+
+    parser.add_argument(
+        "--version-number",
+        type=int,
+        required=True,
+        help="Version number of the model to evaluate",
+    )
+    parser.add_argument(
+        "--num-show-similar",
+        type=int,
+        required=True,
+        help="The value for parameter num-show-similar",
+    )
+
+    args = parser.parse_args()
+    # evaluate(args.version_number, args.n)
+
     dataset = TestDataset()
-    config = get_config(version_number=VERSION_NUMBER)
+    config = get_config(version_number=args.version_number)
 
     # instead of this we can pass any random image as well
     num_images = len(dataset)
@@ -156,5 +174,5 @@ if __name__ == "__main__":
         input_img=img,
         label=label,
         dataset=dataset,
-        num_show_similar=8,
+        num_show_similar=args.num_show_similar,
     )
